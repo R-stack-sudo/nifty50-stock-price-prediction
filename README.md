@@ -53,3 +53,11 @@ Internet access is required for the `yfinance` download step.
 
 - All four neural network models are trained for a small number of epochs for demonstration; increase `epochs` in the notebook for better convergence.
 - Metrics (MAPE / RMSE / MASE) are printed after each model's training cell so results can be compared directly.
+
+## Limitations
+
+- **The ARIMA step has no seasonal component.** It is `ARIMA(1,1,0)`: one autoregressive term on the first-differenced series. It models short-term linear dependence, not trend and seasonality as separate components.
+- **Metrics are computed on MinMax-scaled values.** MAPE, RMSE and MASE are printed on the scaled, ARIMA-adjusted series, so they do not read as index points or rupee/percentage errors on the actual NIFTY-50 close. Do not quote them as price-level accuracy.
+- **MASE above 1 means no gain over a naive forecast.** MASE compares the model's error with a naive "repeat the last value" forecast. A value above 1 on the test split means the model did not beat that baseline. Check the printed MASE for each model before claiming an improvement.
+- **No stand-alone baselines.** Naive and ARIMA-only forecasts are not scored separately on the same test split, so the deep models' gain over simple methods is not demonstrated here.
+- **Single split.** There is one train/test split and no walk-forward (rolling-origin) validation, and the networks are trained for few epochs, so the results are one run, not a stable estimate.
